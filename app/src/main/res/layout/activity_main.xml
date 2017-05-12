@@ -55,16 +55,16 @@
                 <!--android:src="@mipmap/ic_launcher" />-->
         <!--</com.goyourfly.ezledview.EZLedLayout>-->
 
-        <EditText
-            android:id="@+id/edit_text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+        <!--<EditText-->
+            <!--android:id="@+id/edit_text"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content" />-->
 
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:onClick="onSubmitClick"
-            android:text="submit" />
+        <!--<Button-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:onClick="onSubmitClick"-->
+            <!--android:text="submit" />-->
 
 
         <!--<HorizontalScrollView-->
@@ -83,6 +83,26 @@
             <!--</com.goyourfly.ezledview.EZLedLayout>-->
         <!--</HorizontalScrollView>-->
 
+        <TextView
+            android:text="圆点大小"
+            android:max="80"
+            android:layout_marginTop="24dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <SeekBar
+            android:id="@+id/seekbarCircle"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+        <TextView
+            android:layout_marginTop="16dp"
+            android:text="文字大小"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <SeekBar
+            android:max="400"
+            android:id="@+id/seekbarTextSize"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
     </LinearLayout>
 
 </ScrollView>

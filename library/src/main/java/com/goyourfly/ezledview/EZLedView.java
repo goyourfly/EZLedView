@@ -9,10 +9,9 @@ import android.support.annotation.AttrRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
+import android.widget.FrameLayout;
 
 /**
  * Created by gaoyufei on 2017/5/12.
@@ -44,10 +43,33 @@ public class EZLedView extends View{
         mPaint.setColor(Color.BLACK);
     }
 
+    public void setSpace(int space){
+        helper.setSpace(space);
+    }
+
+    public void setRadius(int radius){
+        helper.setCircleRadius(radius);
+    }
+
+    public void setColor(int color){
+        helper.setColor(color);
+    }
+
+    public int getSpace(){
+        return helper.getSpace();
+    }
+
+    public int getRadius(){
+        return helper.getRadius();
+    }
+
+    public int getColor(){
+        return helper.getColor();
+    }
+
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         if(tempBitmap != null){
-            Log.d(TAG,"Width:" + tempBitmap.getWidth());
             setMeasuredDimension(tempBitmap.getWidth(),tempBitmap.getHeight());
         }
     }
@@ -73,7 +95,7 @@ public class EZLedView extends View{
     }
 
     public static Bitmap loadBitmapFromView(View v) {
-        if (v.getMeasuredHeight() <= 0) {
+        if (v.getMeasuredHeight() <= 0 || v.getLayoutParams() == null) {
             v.measure(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             Bitmap b = Bitmap.createBitmap(v.getMeasuredWidth(), v.getMeasuredHeight(), Bitmap.Config.ARGB_8888);
             Canvas c = new Canvas(b);

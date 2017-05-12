@@ -63,6 +63,7 @@ public class EZLedView extends View{
         this.tempBitmap = bitmap;
         if(tempBitmap != null) {
             tempBitmap = helper.getLedBitmap(tempBitmap);
+            requestLayout();
             invalidate();
         }
     }
@@ -71,10 +72,16 @@ public class EZLedView extends View{
         setBitmap(loadBitmapFromView(view));
     }
 
-
-
     public static Bitmap loadBitmapFromView(View v) {
-        Bitmap b = Bitmap.createBitmap( v.getLayoutParams().width, v.getLayoutParams().height, Bitmap.Config.ARGB_8888);
+        if (v.getMeasuredHeight() <= 0) {
+            v.measure(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            Bitmap b = Bitmap.createBitmap(v.getMeasuredWidth(), v.getMeasuredHeight(), Bitmap.Config.ARGB_8888);
+            Canvas c = new Canvas(b);
+            v.layout(0, 0, v.getMeasuredWidth(), v.getMeasuredHeight());
+            v.draw(c);
+            return b;
+        }
+        Bitmap b = Bitmap.createBitmap(v.getLayoutParams().width, v.getLayoutParams().height, Bitmap.Config.ARGB_8888);
         Canvas c = new Canvas(b);
         v.layout(v.getLeft(), v.getTop(), v.getRight(), v.getBottom());
         v.draw(c);

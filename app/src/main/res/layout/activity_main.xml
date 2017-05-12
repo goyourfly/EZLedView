@@ -12,10 +12,15 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <com.goyourfly.ezledview.EZLedView
-            android:id="@+id/ledLayout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.goyourfly.ezledview.EZLedView
+                android:id="@+id/ledLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </HorizontalScrollView>
 
 
 
@@ -50,16 +55,16 @@
                 <!--android:src="@mipmap/ic_launcher" />-->
         <!--</com.goyourfly.ezledview.EZLedLayout>-->
 
-        <!--<EditText-->
-            <!--android:id="@+id/edit_text"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content" />-->
+        <EditText
+            android:id="@+id/edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
-        <!--<Button-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:onClick="onSubmitClick"-->
-            <!--android:text="submit" />-->
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="onSubmitClick"
+            android:text="submit" />
 
 
         <!--<HorizontalScrollView-->

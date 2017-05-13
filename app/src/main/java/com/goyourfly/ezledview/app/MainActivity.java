@@ -23,45 +23,36 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ledLayout = (EZLedView) findViewById(R.id.ledLayout);
 
-//        textView = new TextView(this);
-//        textView.setTextSize(200);
-//        textView.setText("我爱你，么么哒");
-//        ledLayout.setLEDView(textView);
-//        ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(200 * 4, 200);
-//        textView.setLayoutParams(layoutParams);
-//        ledLayout.setLEDView(getLayoutInflater().inflate(R.layout.custom_layout,null));
+        SeekBar circleRadius = (SeekBar) findViewById(R.id.seekbarCircle);
+        circleRadius.setProgress(ledLayout.getLedRadius());
+        circleRadius.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                if(progress < 2)
+                    return;
+                ledLayout.setLedRadius(progress);
+                ledLayout.invalidate();
+            }
 
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
 
-//        SeekBar circleRadius = (SeekBar) findViewById(R.id.seekbarCircle);
-//        circleRadius.setProgress(ledLayout.getRadius());
-//        circleRadius.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-//            @Override
-//            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-//                ledLayout.setRadius(progress);
-//                ledLayout.setLEDView(textView);
-//            }
-//
-//            @Override
-//            public void onStartTrackingTouch(SeekBar seekBar) {
-//
-//            }
-//
-//            @Override
-//            public void onStopTrackingTouch(SeekBar seekBar) {
-//
-//            }
-//        });
+            }
 
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
 
+            }
+        });
 
-//
         SeekBar textSize = (SeekBar) findViewById(R.id.seekbarTextSize);
-        textSize.setProgress(200);
+        textSize.setProgress(ledLayout.getLedTextSize());
         textSize.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                textView.setTextSize(progress);
-                ledLayout.setLEDView(textView);
+                ledLayout.setLedTextSize(progress);
+                ledLayout.requestLayout();
+                ledLayout.invalidate();
             }
 
             @Override
@@ -75,7 +66,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 //
-//
         setRadioCheckListener(R.id.led_type, new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
@@ -87,24 +77,21 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 //
-//        setRadioCheckListener(R.id.point_type, new RadioGroup.OnCheckedChangeListener() {
-//            @Override
-//            public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
-//                if(checkedId == R.id.rb_circle){
-//
-//                }else if(checkedId == R.id.rb_square){
-//
-//                }else {
-//
-//                }
-//            }
-//        });
+        setRadioCheckListener(R.id.point_type, new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
+                if(checkedId == R.id.rb_circle){
+                    ledLayout.setLedType(EZLedView.LED_TYPE_CIRCLE);
+                }else if(checkedId == R.id.rb_square){
+                    ledLayout.setLedType(EZLedView.LED_TYPE_SQUARE);
+                }else {
+                    ledLayout.setLedLightDrawable(getResources().getDrawable(R.drawable.ic_star_black_24dp));
+                    ledLayout.setLedType(EZLedView.LED_TYPE_DRAWABLE);
+                }
+                ledLayout.invalidate();
+            }
+        });
 
-//        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher);
-//        Bitmap newBitmap = Bitmap.createScaledBitmap(bitmap, bitmap.getWidth() * 4, bitmap.getHeight() * 4, false);
-//        ledLayout.setBitmap(newBitmap);
-
-//        ledLayout.setLEDView(getLayoutInflater().inflate(R.layout.custom_imageview,null));
     }
 
     private void setRadioCheckListener(int id, RadioGroup.OnCheckedChangeListener listener){
@@ -112,14 +99,7 @@ public class MainActivity extends AppCompatActivity {
         radioGroup.setOnCheckedChangeListener(listener);
     }
 
-//    public void onSubmitClick(View view) {
-//        EditText text = (EditText) findViewById(R.id.edit_text);
-//        TextView textView = new TextView(this);
-//        textView.setTextSize(200);
-//        textView.setText(text.getText());
-//        textView.setTextColor(Color.BLUE);
-//        ledLayout.setLEDView(textView);
-//    }
+
 
 
 

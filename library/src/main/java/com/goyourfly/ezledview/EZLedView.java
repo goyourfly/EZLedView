@@ -112,7 +112,7 @@ public class EZLedView extends View {
         }
 
         contentType = attributes.getString(R.styleable.EZLedView_content_type);
-        if(TextUtils.isEmpty(contentType)){
+        if (TextUtils.isEmpty(contentType)) {
             contentType = CONTENT_TYPE_TEXT;
         }
 
@@ -266,10 +266,10 @@ public class EZLedView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         Drawable drawable = null;
-        if(contentType.equals(CONTENT_TYPE_TEXT)){
-            drawable = getDrawable(loadBitmapFromText(ledText,paint));
-        }else if(contentType.equals(CONTENT_TYPE_IMAGE)){
-            drawable = getDrawable(loadBitmapFromDrawable(ledImage,getWidth(),getHeight()));
+        if (contentType.equals(CONTENT_TYPE_TEXT)) {
+            drawable = getDrawable(loadBitmapFromText(ledText, paint));
+        } else if (contentType.equals(CONTENT_TYPE_IMAGE)) {
+            drawable = getDrawable(loadBitmapFromDrawable(ledImage, getWidth(), getHeight()));
         }
 
         if (drawable != null) {
@@ -286,15 +286,11 @@ public class EZLedView extends View {
     public void setText(CharSequence text) {
         this.contentType = CONTENT_TYPE_TEXT;
         this.ledText = text;
-        Rect rect = new Rect();
-        paint.getTextBounds(text.toString(), 0, text.length(), rect);
-
-        Paint.FontMetrics m = paint.getFontMetrics();
-        mDrawableWidth = rect.width();
-        mDrawableHeight = (int) (m.bottom - m.ascent);
+        measureTextBound(text.toString());
         requestLayout();
         invalidate();
     }
+
 
     public void setDrawable(Drawable drawable) {
         this.contentType = CONTENT_TYPE_IMAGE;
@@ -311,11 +307,19 @@ public class EZLedView extends View {
             measureBitmap(bitmap);
             Bitmap ledBitmap = generateLedBitmap(bitmap);
             ledDrawable = new BitmapDrawable(getResources(), ledBitmap);
-            ledDrawable.setBounds(0,0,ledBitmap.getWidth(),ledBitmap.getHeight());
+            ledDrawable.setBounds(0, 0, ledBitmap.getWidth(), ledBitmap.getHeight());
             Log.d(TAG, "Bound:" + ledDrawable.getBounds());
             return ledDrawable;
         }
         return null;
+    }
+
+    private void measureTextBound(String text) {
+        Rect rect = new Rect();
+        paint.getTextBounds(text, 0, text.length(), rect);
+        Paint.FontMetrics m = paint.getFontMetrics();
+        mDrawableWidth = rect.width();
+        mDrawableHeight = (int) (m.bottom - m.ascent);
     }
 
     private static Bitmap loadBitmapFromText(CharSequence text, Paint paint) {
@@ -336,9 +340,9 @@ public class EZLedView extends View {
         return bitmap;
     }
 
-    private static Bitmap loadBitmapFromDrawable(Drawable drawable,int width,int height) {
+    private static Bitmap loadBitmapFromDrawable(Drawable drawable, int width, int height) {
         Bitmap bitmap = getBitmapFromDrawable(drawable);
-        return Bitmap.createScaledBitmap(bitmap,width,height,true);
+        return Bitmap.createScaledBitmap(bitmap, width, height, true);
     }
 
     private static Bitmap loadBitmapFromView(View v) {
@@ -389,14 +393,14 @@ public class EZLedView extends View {
 
 
     private void measureBitmap(Bitmap bitmap) {
-        measurePoint(bitmap.getWidth(),bitmap.getHeight());
+        measurePoint(bitmap.getWidth(), bitmap.getHeight());
     }
 
 
     /**
      * Calculate the need drawing point
      */
-    private void measurePoint(int width,int height) {
+    private void measurePoint(int width, int height) {
         int halfBound = ledRadius + ledSpace / 2;
         int x = halfBound;
         int y = halfBound;
@@ -553,6 +557,7 @@ public class EZLedView extends View {
 
     public void setLedColor(int ledColor) {
         this.ledColor = ledColor;
+        paint.setColor(ledColor);
     }
 
     public int getLedTextSize() {
@@ -561,6 +566,8 @@ public class EZLedView extends View {
 
     public void setLedTextSize(int ledTextSize) {
         this.ledTextSize = ledTextSize;
+        measureTextBound(ledText.toString());
+        paint.setTextSize(ledTextSize);
     }
 
     public String getLedType() {

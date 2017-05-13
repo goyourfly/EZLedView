@@ -79,7 +79,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
         <SeekBar
-            android:max="400"
+            android:max="1000"
             android:id="@+id/seekbarTextSize"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
@@ -90,8 +90,10 @@
             android:layout_height="match_parent">
             <com.goyourfly.ezledview.EZLedView
                 android:id="@+id/ledLayout"
+                android:background="@android:color/holo_green_light"
                 app:text_size="200dp"
                 app:image="@drawable/girl"
+                app:led_color="@color/colorAccent"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
         </HorizontalScrollView>

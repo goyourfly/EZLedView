@@ -1,91 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="8dp"
     android:orientation="vertical"
     tools:context="com.goyourfly.ezledview.app.MainActivity">
 
     <LinearLayout
+        android:id="@+id/bottom"
+        android:layout_alignParentBottom="true"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
         android:orientation="vertical">
 
-        <HorizontalScrollView
-            android:layout_width="match_parent"
+        <TextView
+            android:text="Led Type"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <RadioGroup
+            android:id="@+id/led_type"
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content">
-
-            <com.goyourfly.ezledview.EZLedView
-                android:id="@+id/ledLayout"
+            <RadioButton
+                android:text="Image"
+                android:id="@+id/rb_image"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
-        </HorizontalScrollView>
-
-
-
-        <!--<HorizontalScrollView-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content">-->
-
-            <!--<com.goyourfly.ezledview.EZLedTextView-->
-                <!--android:id="@+id/text"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:singleLine="true"-->
-                <!--android:text="我很好"-->
-                <!--android:textColor="@android:color/holo_blue_bright"-->
-                <!--android:textSize="240dp" />-->
-        <!--</HorizontalScrollView>-->
-
-        <!--<com.goyourfly.ezledview.EZLedImageView-->
-            <!--android:layout_width="300dp"-->
-            <!--android:layout_height="200dp"-->
-            <!--android:background="@color/colorAccent"-->
-            <!--android:src="@mipmap/ic_launcher" />-->
-
-        <!--<com.goyourfly.ezledview.EZLedLayout-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content">-->
-
-            <!--<ImageView-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:background="@color/colorAccent"-->
-                <!--android:src="@mipmap/ic_launcher" />-->
-        <!--</com.goyourfly.ezledview.EZLedLayout>-->
-
-        <!--<EditText-->
-            <!--android:id="@+id/edit_text"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content" />-->
-
-        <!--<Button-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:onClick="onSubmitClick"-->
-            <!--android:text="submit" />-->
-
-
-        <!--<HorizontalScrollView-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="match_parent">-->
-
-            <!--<com.goyourfly.ezledview.EZLedLayout-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content">-->
-                <!--<TextView-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:maxLines="1"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:text="I Love U"-->
-                    <!--android:textSize="100dp" />-->
-            <!--</com.goyourfly.ezledview.EZLedLayout>-->
-        <!--</HorizontalScrollView>-->
+            <RadioButton
+                android:text="Text"
+                android:id="@+id/rb_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </RadioGroup>
 
         <TextView
-            android:text="圆点大小"
-            android:max="80"
+            android:text="Point Type"
+            android:layout_marginTop="24dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <RadioGroup
+            android:id="@+id/point_type"
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <RadioButton
+                android:text="Circle"
+                android:id="@+id/rb_circle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <RadioButton
+                android:text="Square"
+                android:id="@+id/rb_square"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <RadioButton
+                android:text="CustomDrawable"
+                android:id="@+id/rb_drawable"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </RadioGroup>
+
+        <TextView
+            android:text="Point Size"
             android:layout_marginTop="24dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
@@ -95,7 +75,7 @@
             android:layout_height="match_parent" />
         <TextView
             android:layout_marginTop="16dp"
-            android:text="文字大小"
+            android:text="Text Szie"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
         <SeekBar
@@ -104,5 +84,15 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
     </LinearLayout>
-
-</ScrollView>
+        <HorizontalScrollView
+            android:layout_above="@id/bottom"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <com.goyourfly.ezledview.EZLedView
+                android:id="@+id/ledLayout"
+                app:text_size="200dp"
+                app:image="@drawable/girl"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </HorizontalScrollView>
+</RelativeLayout>

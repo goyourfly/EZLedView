@@ -4,98 +4,125 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="8dp"
     android:orientation="vertical"
+    android:padding="8dp"
     tools:context="com.goyourfly.ezledview.app.MainActivity">
 
     <LinearLayout
         android:id="@+id/bottom"
-        android:layout_alignParentBottom="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
         android:layout_marginBottom="8dp"
         android:orientation="vertical">
 
         <TextView
-            android:text="Led Type"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:text="Led Type" />
+
         <RadioGroup
             android:id="@+id/led_type"
-            android:orientation="horizontal"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
             <RadioButton
-                android:text="Image"
                 android:id="@+id/rb_image"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="Image" />
+
             <RadioButton
-                android:text="Text"
                 android:id="@+id/rb_text"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:text="Text" />
         </RadioGroup>
 
         <TextView
-            android:text="Point Type"
-            android:layout_marginTop="24dp"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="Point Type" />
+
         <RadioGroup
             android:id="@+id/point_type"
-            android:orientation="horizontal"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
             <RadioButton
-                android:text="Circle"
                 android:id="@+id/rb_circle"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="Circle" />
+
             <RadioButton
-                android:text="Square"
                 android:id="@+id/rb_square"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:text="Square" />
+
             <RadioButton
-                android:text="CustomDrawable"
                 android:id="@+id/rb_drawable"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:text="CustomDrawable" />
         </RadioGroup>
 
         <TextView
-            android:text="Point Size"
-            android:layout_marginTop="24dp"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="Led Size" />
+
         <SeekBar
             android:id="@+id/seekbarCircle"
-            android:max="50"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:max="50" />
+
         <TextView
-            android:layout_marginTop="16dp"
-            android:text="Text Szie"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="Led Space" />
+
         <SeekBar
-            android:max="1000"
+            android:id="@+id/seekbarSpace"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:max="50" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Text Szie" />
+
+        <SeekBar
             android:id="@+id/seekbarTextSize"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:max="1000" />
     </LinearLayout>
-        <HorizontalScrollView
-            android:layout_above="@id/bottom"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-            <com.goyourfly.ezledview.EZLedView
-                android:id="@+id/ledLayout"
-                android:background="@android:color/holo_green_light"
-                app:text_size="200dp"
-                app:image="@drawable/girl"
-                app:led_color="@color/colorAccent"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-        </HorizontalScrollView>
+
+    <HorizontalScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/bottom">
+
+        <com.goyourfly.ezledview.EZLedView
+            android:id="@+id/ledLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimaryDark"
+            app:image="@drawable/simpson"
+            app:led_color="@color/colorAccent"
+            app:text_size="180dp" />
+    </HorizontalScrollView>
 </RelativeLayout>

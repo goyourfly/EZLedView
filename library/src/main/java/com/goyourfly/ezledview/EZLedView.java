@@ -7,7 +7,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
-import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
@@ -29,37 +28,91 @@ import java.util.List;
 
 /**
  * Created by gaoyufei on 2017/5/12.
+ * 这是一个类似于模拟LED灯效果的自定义View
+ * 可以实现将文本和图片转换成LED效果
  */
 
 public class EZLedView extends View {
     private static final String TAG = "EZLedLayout";
 
+    /**
+     * Led light show shape
+     * 1.circle shape
+     * 2.square shape
+     * 3.custom shape
+     */
     public static final String LED_TYPE_CIRCLE = "1";
     public static final String LED_TYPE_SQUARE = "2";
     public static final String LED_TYPE_DRAWABLE = "3";
 
+    /**
+     * Content type,text or image
+     */
     public static final String CONTENT_TYPE_TEXT = "1";
     public static final String CONTENT_TYPE_IMAGE = "2";
 
     private Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-    private Drawable ledDrawable;
-    private int ledSpace = 4;
+    private Drawable ledDrawableTemp;
+
+
+    /**
+     * Led light space
+     */
+    private int ledSpace;
+
+    /**
+     * Led light radius
+     */
     private int ledRadius;
+    /**
+     * Led color, if content is image,this param not work
+     */
     private int ledColor;
-    private int ledTextSize = 50;
+
+    /**
+     * Content text size
+     */
+    private int ledTextSize;
+
+    /**
+     * Content type, text or image
+     */
     private String ledType;
-    private Drawable ledLightDrawable;
+
+    /**
+     * Custom led light drawable
+     */
+    private Drawable customLedLightDrawable;
+
+    /**
+     * Store the points of all px
+     */
     private List<Point> circlePoint = new ArrayList<>();
+
+    /**
+     * Content of text
+     */
     private CharSequence ledText;
 
 
+    /**
+     * Content of image
+     */
     private Drawable ledImage;
+
+    /**
+     * The content width and height
+     */
     private int mDrawableWidth;
     private int mDrawableHeight;
+
     private int mMaxWidth = Integer.MAX_VALUE;
     private int mMaxHeight = Integer.MAX_VALUE;
     private boolean sCompatAdjustViewBounds;
 
+    /**
+     * Padding have not added , so not working
+     */
     private int mPaddingLeft = 0;
     private int mPaddingRight = 0;
     private int mPaddingTop = 0;
@@ -83,6 +136,10 @@ public class EZLedView extends View {
         init(attrs);
     }
 
+    /**
+     * Read the xml config and init
+     * @param attrs the xml config
+     */
     private void init(AttributeSet attrs) {
         final int targetSdkVersion = getContext().getApplicationInfo().targetSdkVersion;
         sCompatAdjustViewBounds = targetSdkVersion <= Build.VERSION_CODES.JELLY_BEAN_MR1;
@@ -94,7 +151,7 @@ public class EZLedView extends View {
         TypedArray attributes = getContext().obtainStyledAttributes(attrs,
                 R.styleable.EZLedView);
         ledRadius = attributes.getDimensionPixelSize(R.styleable.EZLedView_led_radius, 10);
-        ledSpace = attributes.getDimensionPixelOffset(R.styleable.EZLedView_led_space, 5);
+        ledSpace = attributes.getDimensionPixelOffset(R.styleable.EZLedView_led_space, 2);
         ledTextSize = attributes.getDimensionPixelOffset(R.styleable.EZLedView_text_size, 100);
 
         ledColor = attributes.getColor(R.styleable.EZLedView_led_color, 0);
@@ -105,9 +162,9 @@ public class EZLedView extends View {
         if (ledType.equals(LED_TYPE_DRAWABLE)) {
             int ledLightId = attributes.getResourceId(R.styleable.EZLedView_led_light, 0);
             if (ledLightId != 0) {
-                ledLightDrawable = getResources().getDrawable(ledLightId);
+                customLedLightDrawable = getResources().getDrawable(ledLightId);
             }
-            if (ledLightDrawable == null)
+            if (customLedLightDrawable == null)
                 throw new RuntimeException("Drawable type need you set a image");
         }
 
@@ -134,9 +191,19 @@ public class EZLedView extends View {
         }
     }
 
+    /**
+     * Resize the view if need
+     * @param widthMeasureSpec
+     * @param heightMeasureSpec
+     */
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        // Text type not need resize
+        if(contentType.equals(CONTENT_TYPE_TEXT)){
+            setMeasuredDimension(mDrawableWidth,mDrawableHeight);
+            return;
+        }
         int w;
         int h;
 
@@ -265,24 +332,41 @@ public class EZLedView extends View {
 
     @Override
     protected void onDraw(Canvas canvas) {
-        Drawable drawable = null;
+        Bitmap bitmap = null;
         if (contentType.equals(CONTENT_TYPE_TEXT)) {
-            drawable = getDrawable(loadBitmapFromText(ledText, paint));
+            bitmap = getDrawable(renderText(ledText, paint));
         } else if (contentType.equals(CONTENT_TYPE_IMAGE)) {
-            drawable = getDrawable(loadBitmapFromDrawable(ledImage, getWidth(), getHeight()));
+            bitmap = getDrawable(renderDrawable(ledImage, getWidth(), getHeight()));
         }
 
-        if (drawable != null) {
-            drawable.draw(canvas);
+        if (bitmap != null) {
+            int maxWidth = 1024 * 2;
+            if(bitmap.getWidth() > maxWidth){
+                for (int i =0; i < Math.round(bitmap.getWidth()/(float)maxWidth); i++){
+                    int x = i * maxWidth;
+                    int width = maxWidth;
+                    if(x + width > bitmap.getWidth()){
+                        width = bitmap.getWidth() - x;
+                    }
+                    Bitmap newBitmap = Bitmap.createBitmap(bitmap,x,0,width,bitmap.getHeight());
+                    canvas.drawBitmap(newBitmap,x,0,paint);
+                }
+            }else {
+                canvas.drawBitmap(bitmap,0,0,paint);
+            }
         }
     }
 
 
     @Deprecated
-    public void setLEDView(View view) {
+    private void setLEDView(View view) {
 
     }
 
+    /**
+     * Set text content
+     * @param text content
+     */
     public void setText(CharSequence text) {
         this.contentType = CONTENT_TYPE_TEXT;
         this.ledText = text;
@@ -292,6 +376,10 @@ public class EZLedView extends View {
     }
 
 
+    /**
+     * Set drawable content
+     * @param drawable drawable
+     */
     public void setDrawable(Drawable drawable) {
         this.contentType = CONTENT_TYPE_IMAGE;
         this.ledImage = drawable;
@@ -301,50 +389,65 @@ public class EZLedView extends View {
         invalidate();
     }
 
-    private Drawable getDrawable(Bitmap bitmap) {
+    private Bitmap getDrawable(Bitmap bitmap) {
         if (bitmap != null) {
             release();
             measureBitmap(bitmap);
-            Bitmap ledBitmap = generateLedBitmap(bitmap);
-            ledDrawable = new BitmapDrawable(getResources(), ledBitmap);
-            ledDrawable.setBounds(0, 0, ledBitmap.getWidth(), ledBitmap.getHeight());
-            Log.d(TAG, "Bound:" + ledDrawable.getBounds());
-            return ledDrawable;
+            return generateLedBitmap(bitmap);
         }
         return null;
     }
 
+    /**
+     * measure the text width and height
+     * @param text text content
+     */
     private void measureTextBound(String text) {
-        Rect rect = new Rect();
-        paint.getTextBounds(text, 0, text.length(), rect);
         Paint.FontMetrics m = paint.getFontMetrics();
-        mDrawableWidth = rect.width();
+        mDrawableWidth = (int) paint.measureText(text);
         mDrawableHeight = (int) (m.bottom - m.ascent);
     }
 
-    private static Bitmap loadBitmapFromText(CharSequence text, Paint paint) {
+    /**
+     * Transform text to bitmap
+     * @param text text content
+     * @param paint paint
+     * @return the bitmap of text
+     */
+    private static Bitmap renderText(CharSequence text, Paint paint) {
         int width = (int) paint.measureText(text.toString());
-        DynamicLayout dynamicLayout = new DynamicLayout(
-                text,
-                new TextPaint(paint),
-                width,
-                Layout.Alignment.ALIGN_CENTER,
-                0,
-                0,
-                false
-        );
-        int height = dynamicLayout.getHeight();
+//        DynamicLayout dynamicLayout = new DynamicLayout(
+//                text,
+//                new TextPaint(paint),
+//                width,
+//                Layout.Alignment.ALIGN_CENTER,
+//                0,
+//                0,
+//                false
+//        );
+        Paint.FontMetrics m = paint.getFontMetrics();
+        int height = (int) (m.bottom - m.ascent);
         Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
-        dynamicLayout.draw(canvas);
+//        dynamicLayout.draw(canvas);
+        int yPos = (int) ((canvas.getHeight() / 2) - ((paint.descent() + paint.ascent()) / 2));
+        canvas.drawText(text.toString(),0,yPos,paint);
         return bitmap;
     }
 
-    private static Bitmap loadBitmapFromDrawable(Drawable drawable, int width, int height) {
+    /**
+     * Transform the image drawable to bitmap
+     * @param drawable the content drawable
+     * @param width the new bitmap width
+     * @param height the new bitmap height
+     * @return bitmap of drawable
+     */
+    private static Bitmap renderDrawable(Drawable drawable, int width, int height) {
         Bitmap bitmap = getBitmapFromDrawable(drawable);
         return Bitmap.createScaledBitmap(bitmap, width, height, true);
     }
 
+    @Deprecated
     private static Bitmap loadBitmapFromView(View v) {
         if (v.getMeasuredHeight() <= 0 || v.getLayoutParams() == null) {
             v.measure(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -362,24 +465,31 @@ public class EZLedView extends View {
     }
 
 
+    /**
+     * Transform a bitmap to a led bitmap
+     * @param src the original bitmap
+     * @return led bitmap
+     */
     private Bitmap generateLedBitmap(Bitmap src) {
         Bitmap bitmap = Bitmap.createBitmap(src.getWidth(), src.getHeight(), Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
         for (Point point : circlePoint) {
-            int color = isInCircle(src, point.x, point.y);
+            // Detect if the px is in range of our led position
+            int color = isInRange(src, point.x, point.y);
             if (color != 0) {
                 if (ledColor != 0 && !contentType.equals(CONTENT_TYPE_IMAGE)) {
                     color = ledColor;
                 }
                 paint.setColor(color);
 
+                // draw shape according to ledType
                 if (LED_TYPE_CIRCLE.equals(ledType)) {
                     canvas.drawCircle(point.x, point.y, ledRadius, paint);
                 } else if (LED_TYPE_SQUARE.equals(ledType)) {
                     canvas.drawRect(point.x - ledRadius, point.y - ledRadius, point.x + ledRadius, point.y + ledRadius, paint);
                 } else if (LED_TYPE_DRAWABLE.equals(ledType)) {
-                    ledLightDrawable.setBounds(point.x - ledRadius, point.y - ledRadius, point.x + ledRadius, point.y + ledRadius);
-                    ledLightDrawable.draw(canvas);
+                    customLedLightDrawable.setBounds(point.x - ledRadius, point.y - ledRadius, point.x + ledRadius, point.y + ledRadius);
+                    customLedLightDrawable.draw(canvas);
                 }
             }
         }
@@ -387,7 +497,7 @@ public class EZLedView extends View {
     }
 
     public void release() {
-        ledDrawable = null;
+        ledDrawableTemp = null;
         circlePoint.clear();
     }
 
@@ -398,7 +508,7 @@ public class EZLedView extends View {
 
 
     /**
-     * Calculate the need drawing point
+     * Calculate the led point position
      */
     private void measurePoint(int width, int height) {
         int halfBound = ledRadius + ledSpace / 2;
@@ -471,7 +581,14 @@ public class EZLedView extends View {
         return 0;
     }
 
-    private int isInCircle(Bitmap bitmap, int x, int y) {
+    /**
+     * Measure if x and y is in range of leds
+     * @param bitmap the origin bitmap
+     * @param x led x
+     * @param y led y
+     * @return the color , if color is zero means empty
+     */
+    private int isInRange(Bitmap bitmap, int x, int y) {
         if (bitmap == null)
             return 0;
         int pxL = isInCircleLeft(bitmap, x, y);
@@ -507,6 +624,11 @@ public class EZLedView extends View {
         return 0;
     }
 
+    /**
+     * Get bitmap from drawable, Copy from CircleImageView
+     * @param drawable the drawable
+     * @return the bitmap of drawable
+     */
     private static Bitmap getBitmapFromDrawable(Drawable drawable) {
         if (drawable == null) {
             return null;
@@ -565,6 +687,8 @@ public class EZLedView extends View {
     }
 
     public void setLedTextSize(int ledTextSize) {
+        if(ledText == null)
+            throw new NullPointerException("Please set ledText before setLedTextSize");
         this.ledTextSize = ledTextSize;
         measureTextBound(ledText.toString());
         paint.setTextSize(ledTextSize);
@@ -579,11 +703,11 @@ public class EZLedView extends View {
     }
 
     public Drawable getLedLightDrawable() {
-        return ledLightDrawable;
+        return customLedLightDrawable;
     }
 
     public void setLedLightDrawable(Drawable ledLightDrawable) {
-        this.ledLightDrawable = ledLightDrawable;
+        this.customLedLightDrawable = ledLightDrawable;
     }
 
     public CharSequence getLedText() {

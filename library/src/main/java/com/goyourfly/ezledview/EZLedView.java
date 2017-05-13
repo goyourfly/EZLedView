@@ -368,7 +368,7 @@ public class EZLedView extends View {
         for (Point point : circlePoint) {
             int color = isInCircle(src, point.x, point.y);
             if (color != 0) {
-                if (ledColor != 0) {
+                if (ledColor != 0 && !contentType.equals(CONTENT_TYPE_IMAGE)) {
                     color = ledColor;
                 }
                 paint.setColor(color);

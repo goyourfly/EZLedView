@@ -14,12 +14,8 @@ import android.os.Build;
 import android.support.annotation.AttrRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.text.DynamicLayout;
-import android.text.Layout;
-import android.text.TextPaint;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -34,7 +30,10 @@ import java.util.List;
 
 public class EZLedView extends View {
     private static final String TAG = "EZLedLayout";
-
+    /**
+     * The max size of a bitmap
+     */
+    private static final int TEXTURE_MAX = 2 * 1024;
     /**
      * Led light show shape
      * 1.circle shape
@@ -52,7 +51,6 @@ public class EZLedView extends View {
     public static final String CONTENT_TYPE_IMAGE = "2";
 
     private Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-    private Drawable ledDrawableTemp;
 
 
     /**
@@ -160,7 +158,7 @@ public class EZLedView extends View {
             ledType = LED_TYPE_CIRCLE;
 
         if (ledType.equals(LED_TYPE_DRAWABLE)) {
-            int ledLightId = attributes.getResourceId(R.styleable.EZLedView_led_light, 0);
+            int ledLightId = attributes.getResourceId(R.styleable.EZLedView_led_drawable, 0);
             if (ledLightId != 0) {
                 customLedLightDrawable = getResources().getDrawable(ledLightId);
             }
@@ -334,17 +332,17 @@ public class EZLedView extends View {
     protected void onDraw(Canvas canvas) {
         Bitmap bitmap = null;
         if (contentType.equals(CONTENT_TYPE_TEXT)) {
-            bitmap = getDrawable(renderText(ledText, paint));
+            bitmap = generateDrawable(renderText(ledText, paint));
         } else if (contentType.equals(CONTENT_TYPE_IMAGE)) {
-            bitmap = getDrawable(renderDrawable(ledImage, getWidth(), getHeight()));
+            bitmap = generateDrawable(renderDrawable(ledImage, getWidth(), getHeight()));
         }
 
         if (bitmap != null) {
-            int maxWidth = 1024 * 2;
-            if(bitmap.getWidth() > maxWidth){
-                for (int i =0; i < Math.round(bitmap.getWidth()/(float)maxWidth); i++){
-                    int x = i * maxWidth;
-                    int width = maxWidth;
+            if(bitmap.getWidth() > TEXTURE_MAX){
+                int count = (int) (Math.ceil(bitmap.getWidth()/(float)TEXTURE_MAX));
+                for (int i =0; i < count; i++){
+                    int x = i * TEXTURE_MAX;
+                    int width = TEXTURE_MAX;
                     if(x + width > bitmap.getWidth()){
                         width = bitmap.getWidth() - x;
                     }
@@ -389,7 +387,7 @@ public class EZLedView extends View {
         invalidate();
     }
 
-    private Bitmap getDrawable(Bitmap bitmap) {
+    private Bitmap generateDrawable(Bitmap bitmap) {
         if (bitmap != null) {
             release();
             measureBitmap(bitmap);
@@ -414,8 +412,7 @@ public class EZLedView extends View {
      * @param paint paint
      * @return the bitmap of text
      */
-    private static Bitmap renderText(CharSequence text, Paint paint) {
-        int width = (int) paint.measureText(text.toString());
+    private Bitmap renderText(CharSequence text, Paint paint) {
 //        DynamicLayout dynamicLayout = new DynamicLayout(
 //                text,
 //                new TextPaint(paint),
@@ -425,9 +422,7 @@ public class EZLedView extends View {
 //                0,
 //                false
 //        );
-        Paint.FontMetrics m = paint.getFontMetrics();
-        int height = (int) (m.bottom - m.ascent);
-        Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+        Bitmap bitmap = Bitmap.createBitmap(mDrawableWidth, mDrawableHeight, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
 //        dynamicLayout.draw(canvas);
         int yPos = (int) ((canvas.getHeight() / 2) - ((paint.descent() + paint.ascent()) / 2));
@@ -497,7 +492,6 @@ public class EZLedView extends View {
     }
 
     public void release() {
-        ledDrawableTemp = null;
         circlePoint.clear();
     }
 

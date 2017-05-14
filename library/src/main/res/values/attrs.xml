@@ -4,11 +4,11 @@
         <attr name="led_radius" format="dimension"/>
         <attr name="led_color" format="color"/>
         <attr name="led_space" format="dimension"/>
-        <attr name="led_light" format="reference"/>
+        <attr name="led_drawable" format="reference"/>
         <attr name="led_type" format="enum">
             <enum name="circle" value="1"/>
             <enum name="square" value="2"/>
-            <enum name="ledLightDrawable" value="3"/>
+            <enum name="drawable" value="3"/>
         </attr>
         <attr name="content_type">
             <enum name="text" value="1"/>

@@ -18,7 +18,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ledView = (EZLedView) findViewById(R.id.ledView);
-        ledView.set
 
         SeekBar circleRadius = (SeekBar) findViewById(R.id.seekbarCircle);
         circleRadius.setProgress(ledView.getLedRadius());

@@ -5,6 +5,8 @@
 
 #### This view can display image and text like LED banner
 
+>Don't forget click star if you like it, thank you.
+
 ## Demo
 
 <table>

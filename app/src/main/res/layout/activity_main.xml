@@ -117,7 +117,7 @@
         android:layout_above="@id/bottom">
 
         <com.goyourfly.ezledview.EZLedView
-            android:id="@+id/ledLayout"
+            android:id="@+id/ledView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@color/colorPrimaryDark"

@@ -1,36 +1,34 @@
 package com.goyourfly.ezledview.app;
 
 import android.content.Intent;
-import android.os.Handler;
 import android.support.annotation.IdRes;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.HorizontalScrollView;
 import android.widget.RadioGroup;
 import android.widget.SeekBar;
-import android.widget.TextView;
 
 import com.goyourfly.ezledview.EZLedView;
 
 public class MainActivity extends AppCompatActivity {
-    private EZLedView ledLayout;
+    private EZLedView ledView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        ledLayout = (EZLedView) findViewById(R.id.ledLayout);
+        ledView = (EZLedView) findViewById(R.id.ledView);
+        ledView.set
 
         SeekBar circleRadius = (SeekBar) findViewById(R.id.seekbarCircle);
-        circleRadius.setProgress(ledLayout.getLedRadius());
+        circleRadius.setProgress(ledView.getLedRadius());
         circleRadius.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 if(progress < 2)
                     return;
-                ledLayout.setLedRadius(progress);
-                ledLayout.invalidate();
+                ledView.setLedRadius(progress);
+                ledView.invalidate();
             }
 
             @Override
@@ -45,12 +43,12 @@ public class MainActivity extends AppCompatActivity {
         });
 
         SeekBar ledSpace = (SeekBar) findViewById(R.id.seekbarSpace);
-        ledSpace.setProgress(ledLayout.getLedSpace());
+        ledSpace.setProgress(ledView.getLedSpace());
         ledSpace.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                ledLayout.setLedSpace(progress);
-                ledLayout.invalidate();
+                ledView.setLedSpace(progress);
+                ledView.invalidate();
             }
 
             @Override
@@ -65,13 +63,13 @@ public class MainActivity extends AppCompatActivity {
         });
 
         SeekBar textSize = (SeekBar) findViewById(R.id.seekbarTextSize);
-        textSize.setProgress(ledLayout.getLedTextSize());
+        textSize.setProgress(ledView.getLedTextSize());
         textSize.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                ledLayout.setLedTextSize(progress);
-                ledLayout.requestLayout();
-                ledLayout.invalidate();
+                ledView.setLedTextSize(progress);
+                ledView.requestLayout();
+                ledView.invalidate();
 
             }
 
@@ -90,9 +88,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
                 if(checkedId == R.id.rb_text){
-                    ledLayout.setText("HELLO, I LOVE U VERY MUCH!!!");
+                    ledView.setText("HELLO, I LOVE U VERY MUCH!!!");
                 }else {
-                    ledLayout.setDrawable(getResources().getDrawable(R.drawable.simpson));
+                    ledView.setDrawable(getResources().getDrawable(R.drawable.simpson));
                 }
             }
         });
@@ -101,14 +99,14 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
                 if(checkedId == R.id.rb_circle){
-                    ledLayout.setLedType(EZLedView.LED_TYPE_CIRCLE);
+                    ledView.setLedType(EZLedView.LED_TYPE_CIRCLE);
                 }else if(checkedId == R.id.rb_square){
-                    ledLayout.setLedType(EZLedView.LED_TYPE_SQUARE);
+                    ledView.setLedType(EZLedView.LED_TYPE_SQUARE);
                 }else {
-                    ledLayout.setLedLightDrawable(getResources().getDrawable(R.drawable.ic_star_black_24dp));
-                    ledLayout.setLedType(EZLedView.LED_TYPE_DRAWABLE);
+                    ledView.setLedLightDrawable(getResources().getDrawable(R.drawable.ic_star_black_24dp));
+                    ledView.setLedType(EZLedView.LED_TYPE_DRAWABLE);
                 }
-                ledLayout.invalidate();
+                ledView.invalidate();
             }
         });
 

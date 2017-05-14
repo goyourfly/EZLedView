@@ -3,7 +3,7 @@
 
 <img src="./img/img_head.gif?raw=true" alt="Example" width="200" />
 
-我不知道是不是应该叫LedView，或者叫点阵图，就是把图片或文字转换成由点阵构成的效果。
+#### This view can display image and text like LED banner
 
 ## Demo
 
@@ -77,3 +77,20 @@
 
 
 ## Compile
+
+#### Step 1. Add the JitPack repository to your build file
+````
+	allprojects {
+		repositories {
+			...
+			maven { url 'https://jitpack.io' }
+		}
+	}
+````
+
+#### Step 2. Add the dependency
+````
+	dependencies {
+	        compile 'com.github.goyourfly:EZLedView:-SNAPSHOT'
+	}
+````

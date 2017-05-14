@@ -66,7 +66,7 @@
 
 #### Params
 | Name | Format | Explain |
-|-----|:-----:|:------:|
+|:-----|:-----|:------|
 |led_radius|dimension|radius of led point|
 |led_space|dimension|space between led point|
 |led_color|color|color of led point,does not work if the content is image|
